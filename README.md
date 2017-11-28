@@ -41,6 +41,30 @@ Build and Run
 |Use config option X to request  recent trades.                | config.properties       | maxOrders               |
 |Use config option X to limit number of ASKs displayed in UI.  | config.properties       | maxOrders               |
 |The loop that causes the trading algorithm to reevaluate.     | TradeWebSocketCall      | tradingStrategy()       |
+
+
+Bitcoin Trading App integrating with BitSo using JAVAFX and JAVA8
+
+    com\sonar\view Sonar.fxml is the fromt end interface using SceneBuilder
+
+    SonarMainclass loads this fxml and it is binded with our controller SonarController.java file
+
+    SonarController.java initialises the components and call the REST API
+
+    a) Fetch the latest OrderBook (OrderRestService.java) and map the JSON to the POJO (OrderAsks.java,OrderBids.java)
+    b) Fetch the latest Trade     (TradeRestService.java) and map the JSON to the POJO (TradeOrder.java)
+
+    SonarController.java captilizes on the CompletableFeature of JAVA8,So call WebSocket URL on Order and Trade after REST using thenApply
+
+    a) Fetch Live-Feed for OrderBook (OrderWebSocketCall.java) and map the result to POJO (OrderAsks.java,OrderBids.java)
+
+          add the POJO to an ObserVableList if status is OPEN 
+          remove the POJO from list using JAVA8 Predicate removeIf
+
+    b) Fetch Live-Feed for TradeBook (TradeWebSocketCall.java) and map the result to POJO (TradeOrder.java)
+
+            check for the latest price with previous trade price,if higher then increase UpTick count by 1,downtick to 0
+            check for the latest price with previos trade price ,if lesser then increase downTick count by 1,upTick to 0
  
   
   
